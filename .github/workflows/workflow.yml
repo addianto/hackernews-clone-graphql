@@ -1,7 +1,7 @@
 ---
 name: Main Workflow
 
-on: [push, pull_request]
+on: [push]
 
 jobs: 
   test:
@@ -27,4 +27,9 @@ jobs:
           pipenv run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Run tests
         run: |
-          pipenv run python manage.py test
+          pipenv run pytest --junitxml=./.reports/junit/test.xml
+      - name: Archive test results
+        uses: actions/upload-artifact@v1
+        with:
+          name: junit-test-report
+          path: ./.reports/junit/test.xml
